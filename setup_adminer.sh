@@ -1,3 +1,5 @@
+#!/bin/bash
+# Setup adminer
 sudo mkdir /usr/share/adminer
 sudo wget "https://www.adminer.org/latest.php" -O /usr/share/adminer/latest.php
 sudo ln -s /usr/share/adminer/latest.php /usr/share/adminer/adminer.php

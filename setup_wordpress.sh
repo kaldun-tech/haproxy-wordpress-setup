@@ -1,34 +1,40 @@
+#!/bin/bash
+# Sets up Wordpress
+# Requires the $DOMAIN variable to be defined or as first argument
+# Requires the $HTTP_PORT variable to be defined or as second argument
 cd ~  
 mkdir wp  
 cd ~/wp
 wget http://wordpress.org/latest.tar.gz
 tar -xzvf latest.tar.gz 
 
-#For getting Certs: Ubuntu 16+
-sudo certbot certonly --standalone --dry-run --preferred-challenges http --http-01-port 54321 -d linkedguerilla.com 
+if [ -z "$DOMAIN" ]; then
+    if [ -z "$1" ]; then
+        echo "Please define a domain name"
+        exit 1
+    else
+        DOMAIN=$1
+    fi
+fi
+if [ -z "$HTTP_PORT" ]; then
+    if [ -z "$2" ]; then
+        echo "Please define a HTTP port"
+        exit 1
+    else
+        HTTP_PORT=$2
+    fi
+fi
 
-sudo certbot certonly --standalone --preferred-challenges http --http-01-port 54321 -d sarcina.betterbetterbetter.website --dry-run
-
-sudo certbot renew --standalone --preferred-challenges http --http-01-port 54321  
-
-DOMAIN='sarcina.betterbetterbetter.website' sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
-
-sudo rm /etc/letsencyrpt/live/README
-
-################### For First Site Cert ####################
-
+# Stop haproxy service
 sudo service haproxy stop
-DOMAIN='test.elikeetch.com' && sudo certbot certonly --standalone --dry-run  --preferred-challenges http --http-01-port 80 -d $DOMAIN
-DOMAIN='www.test.elikeetch.com' && sudo certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d $DOMAIN
-
-DOMAIN='test.elikeetch.com' sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
-
-DOMAIN='www.communitybootstrap.com' sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
-
+# For getting Certs: Ubuntu 16+. See https://certbot.eff.org/
+sudo certbot certonly --standalone --dry-run --preferred-challenges http --http-01-port $HTTP_PORT -d $DOMAIN
+# Test automatic renewal
+sudo certbot renew --standalone --preferred-challenges http --http-01-port $HTTP_PORT  
+# Install Certs
+sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'
+sudo rm /etc/letsencyrpt/live/README
+# Restart services
 sudo service haproxy restart
 sudo service varnish restart
 sudo service apache2 restart
-
-# Update PHP settings in /etc/php/8.1/php.ini
-# Update /etc/apache2/apache2.conf
-sudo a2enmod rewrite
