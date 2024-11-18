@@ -32,3 +32,11 @@ Scripts to set up HAProxy with WordPress on a Linux server
 8. Setup MySQL: `setup_mysql.sh [NAME]`
 9. Place certificate autorenew script in `/usr/local/sbin/le-renew-proxy`
 10. Add Wordpress sites: `add_wp_site.sh [NAME] [MYSQL_PASSWORD]`
+
+# Future improvements
+
+- Look into a more robust configuration management tool like Ansible or Puppet to manage configuration.
+- Add scripts to automate certificate renewal and SSL termination.
+- Configure WordPress to use the HAProxy load balancer.
+- Implement security best practices, such as using environment variables or a secrets manager to store sensitive information.
+- Add error handling mechanisms to handle unexpected errors.
