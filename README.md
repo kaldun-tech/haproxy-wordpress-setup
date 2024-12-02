@@ -5,29 +5,29 @@ Scripts to set up HAProxy with WordPress on a Linux server
 0. Check timezone is correct using `timedatectl list-timezones` and `set-timezone` arguments
 1. Add your user: `setup_user.sh [user]`
 
-- Update `/etc/ssh/sshd_config` with 21212
+- Update `/etc/ssh/sshd_config` with correct port
 - Reboot or `sudo service ssh restart`
 
 2. Setup PHP: `setup_php.sh`
 3. Setup Adminer: `setup_adminer.sh`
 4. Install Varnish: `install_varnish.sh`
 
-- Update config files: `/etc/default/varnish` `/lib/systemd/system/varnish.service` `/etc/varnish/default.vcl`
+- Update config files: `/etc/default/varnish` `/etc/varnish/default.vcl` `/lib/systemd/system/varnish.service`
 - Restart Varnish: `restart_varnish.sh`
 
-5. Define certificates for domain names in `/etc/letsencrypt/live`
+5. Define certificate folders for each domain name in `/etc/letsencrypt/live`
 6. Setup HAProxy: `setup_haproxy.sh`
 
-- Update `/etc/haproxy/haproxy.cfg`, `/usr/local/sbin/le-renew-haproxy`
+- Update `/etc/haproxy/haproxy.cfg` `/usr/local/sbin/le-renew-haproxy`
 - Set executable: `sudo chmod 007 /usr/local/sbin/le-renew-haproxy`
 - Update crontab: `sudo crontab haproxy_crontab_autorenew.cron`
 - Update `/etc/apache2/sites-available/000-default.conf`
 
 7. Setup Wordpress
 
-- Update PHP settings in `/etc/php/8.1/php.ini`
+- Update PHP settings in `/etc/php/8.1/apache2/php.ini`
 - Update Apache2 configuration `/etc/apache2/apache2.conf`
-- Enable Apache modules: `sudo a2enmod rewrite`
+- Enable Apache modules: `setup_apache2.sh`
 
 8. Setup MySQL: `setup_mysql.sh [NAME]`
 9. Place certificate autorenew script in `/usr/local/sbin/le-renew-proxy`
