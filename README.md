@@ -5,7 +5,7 @@ Scripts to set up HAProxy with WordPress on a Linux server
 0. Check timezone is correct using `timedatectl list-timezones` and `set-timezone` arguments
 1. Add your user: `setup_user.sh [user]`
 
-- Update `/etc/ssh/sshd_config` with correct port
+- Update `/etc/ssh/sshd_config` with the correct port
 - Reboot or `sudo service ssh restart`
 
 2. Setup PHP: `setup_php.sh`
