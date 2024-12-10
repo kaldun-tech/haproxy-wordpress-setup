@@ -34,7 +34,7 @@
 - Set the `DB_NAME DB_USER DB_PASSWORD` environment variables using the `export <var>=<value>` keyword. `DB_NAME` defaults to `wordpress` if not defined.
 - Run the script, it will prompt for the root password: `setup_mysql.sh`
 
-9. Place certificate autorenew script in `/usr/local/sbin/le-renew-proxy`
+9. Place certificate autorenew script in `/usr/local/sbin/le-renew-haproxy`
 10. Add Wordpress sites: `add_wp_site.sh [NAME] [MYSQL_PASSWORD]`
 
 ## Testing
