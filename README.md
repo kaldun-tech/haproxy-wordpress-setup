@@ -1,6 +1,6 @@
 # haproxy-wordpress-setup
 
-Scripts to set up HAProxy with WordPress on a Linux server
+## Set up HAProxy with WordPress on Linux
 
 0. Check timezone is correct using `timedatectl list-timezones` and `set-timezone` arguments
 1. Add your user: `setup_user.sh [user]`
@@ -29,11 +29,48 @@ Scripts to set up HAProxy with WordPress on a Linux server
 - Update Apache2 configuration `/etc/apache2/apache2.conf`
 - Enable Apache modules: `setup_apache2.sh`
 
-8. Setup MySQL: `setup_mysql.sh [NAME]`
+8. Configure the `setup_mysql.sh` script
+
+- Set the `DB_NAME DB_USER DB_PASSWORD` environment variables using the `export <var>=<value>` keyword. `DB_NAME` defaults to `wordpress` if not defined.
+- Run the script, it will prompt for the root password: `setup_mysql.sh`
+
 9. Place certificate autorenew script in `/usr/local/sbin/le-renew-proxy`
 10. Add Wordpress sites: `add_wp_site.sh [NAME] [MYSQL_PASSWORD]`
 
-# Future improvements
+## Testing
+
+1. Check MySQL connection and WordPress database
+
+- Log into your MySQL server using the command line: `mysql -u <user> -p`
+- If you can connect successfully, your MySQL is running properly.
+- Once connected to MySQL, list the databases: `SHOW DATABASES;`
+- Ensure your WordPress database is listed.
+
+2. Test WordPress installation:
+
+- Open a web browser and navigate to your server's IP address or domain name.
+- If you see the WordPress installation page or your WordPress site, it indicates that Apache/Nginx and PHP are working correctly with WordPress.
+
+3. Check WordPress configuration:
+
+- Verify the wp-config.php file in your WordPress root directory contains the correct database credentials.
+
+4. Review server logs:
+
+- Check Apache/Nginx error logs for any PHP or MySQL related errors: `sudo tail -f /var/log/apache2/error.log`
+- or `sudo tail -f /var/log/nginx/error.log`
+
+5. Test PHP processing:
+
+- Create a simple PHP file (e.g., test.php) in your web root with the following content: `<?php phpinfo(); ?>`
+- Access this file through your web browser to ensure PHP is working correctly.
+
+6. Check WordPress functionality:
+
+- Log into the WordPress admin panel (usually at /wp-admin)
+- Create a test post or page to ensure the database is writable
+
+## Future improvements
 
 - Look into a more robust configuration management tool like Ansible or Puppet to manage configuration.
 - Add scripts to automate certificate renewal and SSL termination.
