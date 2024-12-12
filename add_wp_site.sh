@@ -19,3 +19,4 @@ sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencryp
 sudo rm /etc/letsencrypt/live/README
 sudo service apache2 restart
 sudo service haproxy restart
+sudo systemctl daemon-reload

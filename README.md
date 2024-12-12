@@ -63,7 +63,7 @@
 
 3. Check WordPress configuration:
 
-- Verify the wp-config.php file in your WordPress root directory contains the correct database credentials.
+- Verify the file in your WordPress root directory `/var/www/$DOMAIN/public_html/wp-config.php` contains the correct database credentials.
 
 4. Review server logs:
 
