@@ -3,20 +3,20 @@
 ## Set up HAProxy with WordPress on Linux
 
 0. Check timezone is correct using `timedatectl list-timezones` and `set-timezone` arguments
-1. Add your user: `setup_user.sh [user]`
+1. Add your user: `./setup_user.sh [user]`
 
 - Update `/etc/ssh/sshd_config` with the correct port
 - Reboot or `sudo service ssh restart`
 
-2. Setup PHP: `setup_php.sh`
-3. Setup Adminer: `setup_adminer.sh`
-4. Install Varnish: `install_varnish.sh`
+2. Setup PHP: `./setup_php.sh`
+3. Setup Adminer: `./setup_adminer.sh`
+4. Install Varnish: `./install_varnish.sh`
 
 - Update config files: `/etc/default/varnish` `/etc/varnish/default.vcl` `/lib/systemd/system/varnish.service`
-- Restart Varnish: `restart_varnish.sh`
+- Restart Varnish: `./restart_varnish.sh`
 
 5. Define certificate folders for each domain name in `/etc/letsencrypt/live`
-6. Setup HAProxy: `setup_haproxy.sh`
+6. Setup HAProxy: `./setup_haproxy.sh`
 
 - Update `/etc/haproxy/haproxy.cfg` `/usr/local/sbin/le-renew-haproxy`
 - Set executable: `sudo chmod 007 /usr/local/sbin/le-renew-haproxy`
@@ -27,15 +27,25 @@
 
 - Update PHP settings in `/etc/php/8.1/apache2/php.ini`
 - Update Apache2 configuration `/etc/apache2/apache2.conf`
-- Enable Apache modules: `setup_apache2.sh`
+- Enable Apache modules: `./setup_apache2.sh`
 
 8. Configure the `setup_mysql.sh` script
 
-- Set the `DB_NAME DB_USER DB_PASSWORD` environment variables using the `export <var>=<value>` keyword. `DB_NAME` defaults to `wordpress` if not defined.
-- Run the script, it will prompt for the root password: `setup_mysql.sh`
+- Set the `MYSQL_NAME MYSQL_USER MYSQL_PASSWORD` environment variables using the `export <var>=<value>` keyword.
+- `MYSQL_NAME` defaults to `wordpress` if not defined.
+- Run the script, it prompts for the root password: `./setup_mysql.sh`
 
 9. Place certificate autorenew script in `/usr/local/sbin/le-renew-haproxy`
-10. Add Wordpress sites: `add_wp_site.sh [NAME] [MYSQL_PASSWORD]`
+10. Configure the `add_wp_site.sh` script
+
+- Set the `DOMAIN` environment variable using `export DOMAIN=<value>`
+- Copy the default domain configuration `sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$DOMAIN.conf`
+- Configure `/etc/apache2/sites-available/$DOMAIN.conf`
+- Run script to add Wordpress sites: `./add_wp_site.sh`
+
+11. Update WordPress config: `/var/www/$DOMAIN/public_html/wp-config.php`
+
+- Check Apache error logs: `sudo tail -f /var/log/apache2/error.log | grep 1bc `
 
 ## Testing
 
