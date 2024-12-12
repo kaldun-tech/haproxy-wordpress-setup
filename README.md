@@ -39,9 +39,9 @@
 10. Configure the `add_wp_site.sh` script
 
 - Set the `DOMAIN` environment variable using `export DOMAIN=<value>`
-- Copy the default domain configuration `sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$DOMAIN.conf`
+- Copy the default configuration to your domain: `sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$DOMAIN.conf`
 - Configure `/etc/apache2/sites-available/$DOMAIN.conf`
-- Run script to add Wordpress sites: `./add_wp_site.sh`
+- Run script to add a Wordpress site: `./add_wp_site.sh [DOMAIN]`
 
 11. Update WordPress config: `/var/www/$DOMAIN/public_html/wp-config.php`
 
