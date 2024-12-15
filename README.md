@@ -1,6 +1,6 @@
 # haproxy-wordpress-setup
 
-## Set up HAProxy with WordPress on Linux
+## Set up HAProxy and LAMP stack with WordPress
 
 0. Check timezone is correct using `timedatectl list-timezones` and `set-timezone` arguments
 1. Add your user: `./scripts/setup_user.sh [user]`
@@ -45,12 +45,15 @@
 - Configure `/etc/apache2/sites-available/$DOMAIN.conf`
 - Run script to add a Wordpress site: `./scripts/add_wp_site.sh [DOMAIN]`
 
-11. Update WordPress config: `/var/www/$DOMAIN/public_html/wp-config.php`
+11. Check WordPress config is added to the correct directory: `/var/www/DOMAIN/public_html/wp-config.php`
+
+- Customize configuration appropriately
+
 12. Test with `/scripts/test_wordpress.sh [DOMAIN]`
 
 - Check Apache error logs: `sudo tail -f /var/log/apache2/error.log | grep 1bc `
 
-## Additional testing
+## Additional testing and troubleshooting
 
 1. Check MySQL connection and WordPress database
 
@@ -66,7 +69,7 @@
 
 3. Check WordPress configuration:
 
-- Verify the file in your WordPress root directory `/var/www/$DOMAIN/public_html/wp-config.php` contains the correct database credentials.
+- Verify the file in your WordPress root directory `/var/www/DOMAIN/public_html/wp-config.php` contains the correct database credentials.
 
 4. Review server logs:
 
@@ -76,7 +79,7 @@
 5. Test basic PHP processing:
 
 - Copy `/scripts/test/test_php.php` to `/var/www/html`
-- Open the test file through your web browser `http://$DOMAIN/test_php.php`
+- Open the test file through your web browser `http://DOMAIN/test_php.php`
 - Observe the PHP version info is displayed
 - Cleanup the file `rm -f /var/www/html/test_php.php`
 
