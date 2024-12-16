@@ -2,54 +2,57 @@
 
 ## Set up HAProxy and LAMP stack with WordPress
 
-0. Check timezone is correct using `timedatectl list-timezones` and `set-timezone` arguments
-1. Add your user: `./scripts/setup_user.sh [user]`
+1. Check timezone is correct using `timedatectl`.
+
+- Use the `list-timezones` and `set-timezone` arguments to list and set timezones appropriately.
+
+2. Add your user: `./scripts/setup_user.sh [user]`
 
 - Update `/etc/ssh/sshd_config` with the correct port
 - Reboot or `sudo service ssh restart`
 
-2. Setup PHP: `./scripts/setup_php.sh`
-3. Setup Adminer: `./scripts/setup_adminer.sh`
-4. Install Varnish: `./scripts/install_varnish.sh`
+3. Setup PHP: `./scripts/setup_php.sh`
+4. Setup Adminer: `./scripts/setup_adminer.sh`
+5. Install Varnish: `./scripts/install_varnish.sh`
 
 - Update config files: `/etc/default/varnish` `/etc/varnish/default.vcl` `/lib/systemd/system/varnish.service`
 - Restart Varnish: `./scripts/restart_varnish.sh`
 
-5. Define certificate folders for each domain name in `/etc/letsencrypt/live`
-6. Setup HAProxy: `./scripts/setup_haproxy.sh`
+6. Define certificate folders for each domain name in `/etc/letsencrypt/live`
+7. Setup HAProxy: `./scripts/setup_haproxy.sh`
 
 - Update `/etc/haproxy/haproxy.cfg` `/usr/local/sbin/le-renew-haproxy`
 - Set executable: `sudo chmod 007 /usr/local/sbin/le-renew-haproxy`
 - Update crontab: `sudo crontab haproxy_crontab_autorenew.cron`
 - Update `/etc/apache2/sites-available/000-default.conf`
 
-7. Setup Apache
+8. Setup Apache
 
 - Update PHP settings in `/etc/php/8.1/apache2/php.ini`
 - Update Apache2 configuration `/etc/apache2/apache2.conf`
 - Enable Apache modules: `./scripts/setup_apache2.sh`
 - Test with `./scripts/tests/test_lamp.sh`
 
-8. Configure the `setup_mysql.sh` script
+9. Configure the `setup_mysql.sh` script
 
 - Set the `MYSQL_NAME MYSQL_USER MYSQL_PASSWORD` environment variables using the `export <var>=<value>` keyword.
 - `MYSQL_NAME` defaults to `wordpress` if not defined.
 - Run the script, enter root password when prompted: `./scripts/setup_mysql.sh`
 - Test with `./scripts/tests/test_mysql.sh`
 
-9. Place certificate autorenew script in `/usr/local/sbin/le-renew-haproxy`
-10. Configure the `add_wp_site.sh [DOMAIN]` script
+10. Place certificate autorenew script in `/usr/local/sbin/le-renew-haproxy`
+11. Configure the `add_wp_site.sh [DOMAIN]` script
 
 - Set the `DOMAIN` environment variable using `export DOMAIN=<value>`
 - Copy the default configuration to your domain: `sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$DOMAIN.conf`
 - Configure `/etc/apache2/sites-available/$DOMAIN.conf`
 - Run script to add a Wordpress site: `./scripts/add_wp_site.sh [DOMAIN]`
 
-11. Check WordPress config is added to the correct directory: `/var/www/DOMAIN/public_html/wp-config.php`
+12. Check WordPress config is added to the correct directory: `/var/www/DOMAIN/public_html/wp-config.php`
 
 - Customize configuration appropriately
 
-12. Test with `/scripts/test_wordpress.sh [DOMAIN]`
+13. Test with `/scripts/test_wordpress.sh [DOMAIN]`
 
 - Check Apache error logs: `sudo tail -f /var/log/apache2/error.log | grep 1bc `
 
