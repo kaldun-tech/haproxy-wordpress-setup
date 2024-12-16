@@ -24,7 +24,8 @@
 - Update `/etc/haproxy/haproxy.cfg` `/usr/local/sbin/le-renew-haproxy`
 - Set executable: `sudo chmod 007 /usr/local/sbin/le-renew-haproxy`
 - Update crontab: `sudo crontab haproxy_crontab_autorenew.cron`
-- Update `/etc/apache2/sites-available/000-default.conf`
+- For each domain copy and update the file `/etc/apache2/sites-available/000-default.conf` as `[DOMAIN].conf`
+- Enable each site by creating a symbolic link to the corresponding config file in sites-enabled: `sudo ln -s /etc/apache2/sites-available/[DOMAIN].conf /etc/apache2/sites-enabled/`
 
 8. Setup Apache
 
@@ -55,6 +56,15 @@
 13. Test with `/scripts/test_wordpress.sh [DOMAIN]`
 
 - Check Apache error logs: `sudo tail -f /var/log/apache2/error.log | grep 1bc `
+
+## Optional: Setup and test Nginx for load balancing, reverse proxy and security
+
+- Copy `etc/nginx/sites-available/default.conf` to your `/etc/nginx/sites-available` folder
+- For each domain copy and customize `default.conf` to `[DOMAIN].conf`
+- Run `./scripts/setup_nginx.sh`
+- Create symbolic links for each domain `sudo ln -s /etc/nginx/sites-available/[DOMAIN].conf /etc/nginx/sites-enabled/`
+- Reload configuration `sudo nginx -s reload`
+- Test with `./scripts/test/test_nginx.sh`
 
 ## Additional testing and troubleshooting
 

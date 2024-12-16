@@ -17,14 +17,6 @@ else
     exit 1
 fi
 
-netstat -tlnp | grep 443
-if [ $? -eq 0 ]; then
-    echo "Test 3: Nginx is up and running"
-else
-    echo "Test 3: Nginx is not up and running"
-    exit 1
-fi
-
 netstat -tlnp | grep 8080
 if [ $? -eq 0 ]; then
     echo "Test 4: Varnish is up and running"
