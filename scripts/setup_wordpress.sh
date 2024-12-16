@@ -25,6 +25,9 @@ if [ -z "$HTTP_PORT" ]; then
     fi
 fi
 
+# Install Wordpress command line interface via Composer
+sudo apt-get install -y composer php-curl php-cli php-xml php-zip php-intl
+composer global require wp-cli/wp-cli
 # Stop haproxy service
 sudo service haproxy stop
 # For getting Certs: Ubuntu 16+. See https://certbot.eff.org/

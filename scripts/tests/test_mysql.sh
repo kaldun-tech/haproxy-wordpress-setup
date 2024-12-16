@@ -15,7 +15,7 @@ else
 fi
 
 # Test 2: Check if the WordPress user has the correct privileges
-mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -e "SHOW GRANTS FOR '${MYSQL_USER}'@'%';"
+mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -e "SHOW GRANTS FOR '${MYSQL_USER}'@'localhost';"
 if [ $? -eq 0 ]; then
   echo "Test 2: WordPress user has correct privileges"
 else

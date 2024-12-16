@@ -15,7 +15,7 @@ sudo mysql_secure_installation
 # Create Wordpress DB
 sudo mysql -u root -p${ROOT_PASSWORD} --execute="CREATE DATABASE $MYSQL_NAME;"
 sudo mysql -u root -p${ROOT_PASSWORD} --execute="CREATE USER $MYSQL_USER@localhost IDENTIFIED BY '$MYSQL_PASSWORD';"
-sudo mysql -u root -p${ROOT_PASSWORD} --execute="GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO $MYSQL_USER@localhost;"
+sudo mysql -u root -p${ROOT_PASSWORD} --execute="GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO '$MYSQL_USER'@'localhost';"
 sudo mysql -u root -p${ROOT_PASSWORD} --execute="FLUSH PRIVILEGES;"
 # Correct permissions for crontab cert renewal
 sudo chmod 007 /usr/local/sbin/le-renew-haproxy
