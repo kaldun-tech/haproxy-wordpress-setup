@@ -1,4 +1,4 @@
-#  0 3 * * * /usr/local/sbin/le-renew-haproxy
+0 3 * * * /usr/local/sbin/le-renew-haproxy
 
 #            CERTBOT
 # BEGIN autorenew script for multiple domains 
