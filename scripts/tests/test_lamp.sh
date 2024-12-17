@@ -33,7 +33,7 @@ else
   exit 1
 fi
 
-ufw status
+sudo ufw status
 if [ $? -eq 0 ]; then
     echo "Test 6: Firewall is up and running"
 else
