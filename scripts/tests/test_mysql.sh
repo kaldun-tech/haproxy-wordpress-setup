@@ -5,12 +5,27 @@ MYSQL_NAME=${MYSQL_NAME:-wordpress}
 MYSQL_USER=${MYSQL_USER}
 MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
+# Add validation for required environment variables
+if [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ]; then
+    echo "ERROR: MYSQL_USER and MYSQL_PASSWORD must be set"
+    exit 1
+fi
+
 # Add logging function
 log_message() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
-# Test 1: Check if the WordPress database exists
+# Test 1: Check if MySQL is up and running
+netstat -tlnp | grep 3306
+if [ $? -eq 0 ]; then
+    log_message "Test 21: MySQL is up and running"
+else
+    log_message "ERROR: Test 21: MySQL is NOT up and running"
+    exit 1
+fi
+
+# Test 2: Check if the WordPress database exists
 mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -e "SHOW DATABASES LIKE '${MYSQL_NAME}';"
 if [ $? -eq 0 ]; then
   log_message "Test 1: WordPress database exists"

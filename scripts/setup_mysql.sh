@@ -5,6 +5,12 @@ MYSQL_NAME=${MYSQL_NAME:-wordpress}
 MYSQL_USER=${MYSQL_USER}
 MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
+# Add validation for required environment variables
+if [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ]; then
+    echo "Error: MYSQL_USER and MYSQL_PASSWORD must be set"
+    exit 1
+fi
+
 # Prompt for root password
 read -s -p "Enter root password: " ROOT_PASSWORD
 
@@ -19,3 +25,9 @@ sudo mysql -u root -p${ROOT_PASSWORD} --execute="GRANT ALL PRIVILEGES ON $MYSQL_
 sudo mysql -u root -p${ROOT_PASSWORD} --execute="FLUSH PRIVILEGES;"
 # Correct permissions for crontab cert renewal
 sudo chmod 007 /usr/local/sbin/le-renew-haproxy
+
+# Test MySQL connection after setup
+if ! mysql -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1" >/dev/null 2>&1; then
+    echo "Error: MySQL connection test failed"
+    exit 1
+fi

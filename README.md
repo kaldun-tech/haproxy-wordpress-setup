@@ -19,41 +19,47 @@
 - Restart Varnish: `./scripts/restart_varnish.sh`
 
 6. Define certificate folders for each domain name in `/etc/letsencrypt/live`
-7. Setup HAProxy: `./scripts/setup_haproxy.sh`
+7. Create a cron job to renew certificates at 3 AM daily
+
+- Run `./scripts/setup_crontab.sh`
+- Test with `sudo crontab -e` and check the cron job is added
+- Verify crontab syntax is correct: `crontab -l | crontab -`
+
+8. Setup HAProxy: `./scripts/setup_haproxy.sh`
 
 - Update `/etc/haproxy/haproxy.cfg` `/usr/local/sbin/le-renew-haproxy`
 - Set executable: `sudo chmod 007 /usr/local/sbin/le-renew-haproxy`
-- Update crontab: `sudo crontab haproxy_crontab_autorenew.cron`
 - For each domain copy and update the file `/etc/apache2/sites-available/000-default.conf` as `[DOMAIN].conf`
 - Enable each site by creating a symbolic link to the corresponding config file in sites-enabled: `sudo ln -s /etc/apache2/sites-available/[DOMAIN].conf /etc/apache2/sites-enabled/`
 
-8. Setup Apache
+9. Setup Apache
 
 - Update PHP settings in `/etc/php/8.1/apache2/php.ini`
 - Update Apache2 configuration `/etc/apache2/apache2.conf`
 - Enable Apache modules: `./scripts/setup_apache2.sh`
+- Verify Apache configuration: `sudo apache2ctl -t`
 - Test with `./scripts/tests/test_lamp.sh`
 
-9. Configure the `setup_mysql.sh` script
+10. Configure the `setup_mysql.sh` script
 
 - Set the `MYSQL_NAME MYSQL_USER MYSQL_PASSWORD` environment variables using the `export <var>=<value>` keyword.
 - `MYSQL_NAME` defaults to `wordpress` if not defined.
 - Run the script, enter root password when prompted: `./scripts/setup_mysql.sh`
 - Test with `./scripts/tests/test_mysql.sh`
 
-10. Place certificate autorenew script in `/usr/local/sbin/le-renew-haproxy`
-11. Configure the `add_wp_site.sh [DOMAIN]` script
+11. Place certificate autorenew script in `/usr/local/sbin/le-renew-haproxy`
+12. Configure the `add_wp_site.sh [DOMAIN]` script
 
 - Set the `DOMAIN` environment variable using `export DOMAIN=<value>`
 - Copy the default configuration to your domain: `sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$DOMAIN.conf`
 - Configure `/etc/apache2/sites-available/$DOMAIN.conf`
 - Run script to add a Wordpress site: `./scripts/add_wp_site.sh [DOMAIN]`
 
-12. Check WordPress config is added to the correct directory: `/var/www/DOMAIN/public_html/wp-config.php`
+13. Check WordPress config is added to the correct directory: `/var/www/DOMAIN/public_html/wp-config.php`
 
 - Customize configuration appropriately
 
-13. Test with `/scripts/test_wordpress.sh [DOMAIN]`
+14. Test with `/scripts/test_wordpress.sh [DOMAIN]`
 
 - Check Apache error logs: `sudo tail -f /var/log/apache2/error.log | grep 1bc `
 
@@ -67,6 +73,16 @@
 - Test with `./scripts/test/test_nginx.sh`
 
 ## Additional testing and troubleshooting
+
+When you run into trouble check the logs:
+
+- Apache: `/var/log/apache2/error.log`
+- Nginx: `/var/log/nginx/error.log`
+- MySQL: `/var/log/mysql/error.log`
+- PHP: `/var/log/php8.1-fpm.log`
+- HAProxy: `/var/log/haproxy.log`
+- Varnish: `/var/log/varnish.log`
+- Let's Encrypt: `/var/log/letsencrypt/letsencrypt.log`
 
 1. Check MySQL connection and WordPress database
 

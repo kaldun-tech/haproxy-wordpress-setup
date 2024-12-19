@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Renew certificates at 3 AM daily
+0 3 * * * root /usr/local/sbin/le-renew-haproxy

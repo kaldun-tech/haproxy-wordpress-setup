@@ -1,50 +1,34 @@
-#            CERTBOT
-# BEGIN autorenew script for multiple domains 
-#            CERTBOT
-
-
 #!/bin/bash
-certbot renew --standalone --preferred-challenges http --http-01-port 54321  
 
+# Log start time
+echo "Starting certificate renewal at $(date)"
 
-sudo bash -c "rm /etc/letsencrypt/live/README"
+# Stop HAProxy temporarily if needed
+# service haproxy stop
 
-for i in $( ls /etc/letsencrypt/live ); do
+# Renew certificates
+certbot renew --standalone --preferred-challenges http --http-01-port 54321
 
-web_service='haproxy'
-domain=$i
-http_01_port='54321'
-combined_file="/etc/haproxy/certs/${domain}.pem"
-exp_limit=30;
+# Process each domain
+for domain in $(ls /etc/letsencrypt/live); do
+    # Skip the README file
+    if [ "$domain" = "README" ]; then
+        continue
+    fi
 
-echo ""
-echo "############################################################"
-echo "########   $domain  :  ($days_exp days left)    ########"
-echo "############################################################"
-echo ""
-
-
-cert_file="/etc/letsencrypt/live/$domain/fullchain.pem"
-key_file="/etc/letsencrypt/live/$domain/privkey.pem"
-
-if [ ! -f $cert_file ]; then
-  echo "[ERROR] certificate file not found for domain $domain."
-fi
-
-exp=$(date -d "`openssl x509 -in $cert_file -text -noout|grep "Not After"|cut -c 25-`" +%s)
-datenow=$(date -d "now" +%s)
-days_exp=$(echo \( $exp - $datenow \) / 86400 |bc)
-
-
-  echo "Creating $combined_file with latest certs..."
-  sudo bash -c "cat /etc/letsencrypt/live/$domain/fullchain.pem /etc/letsencrypt/live/$domain/privkey.pem > $combined_file"
-
-  echo "Renewal process finished for domain $domain"
-
+    echo "Processing $domain"
+    
+    # Combine cert and key for HAProxy
+    cat "/etc/letsencrypt/live/$domain/fullchain.pem" \
+        "/etc/letsencrypt/live/$domain/privkey.pem" \
+        > "/etc/haproxy/certs/$domain.pem"
+        
+    # Set correct permissions
+    chmod 600 "/etc/haproxy/certs/$domain.pem"
 done
 
+# Restart HAProxy to pick up new certificates
+service haproxy reload
 
-  echo "Reloading $web_service"
-  /usr/sbin/service $web_service reload
-
-#END autorenew script
+# Log completion
+echo "Certificate renewal completed at $(date)"

@@ -15,8 +15,19 @@ log_message() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
-# Use it in tests
 log_message "Starting WordPress tests for domain: $DOMAIN"
+
+# Test SSL certificate
+sudo certbot certificates
+curl -vI https://${DOMAIN}
+
+# Check WordPress files permissions
+find /var/www/${DOMAIN}/public_html -type f -exec stat -c "%a %n" {} \;
+
+# Verify WordPress installation
+wp core verify-checksums --path=/var/www/${DOMAIN}/public_html
+
+# Test 1: Check if the WordPress site is up and running
 curl -s -o /dev/null -w "%{http_code}" http://${DOMAIN}
 if [ $? -eq 200 ]; then
     log_message "Test 1: WordPress site is up and running"
