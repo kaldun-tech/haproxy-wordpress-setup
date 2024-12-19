@@ -51,3 +51,5 @@ else
   log_message "ERROR: Test 3: WordPress tables are NOT created"
   exit 1
 fi
+
+log_message "All tests passed"
